@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ReactComponent as DeleteIcon } from '../images/delete.svg'
 import { toast } from 'react-toastify';
 
 export interface IEditQuestaoCard {
+    onAddQuestao: (questao: IQuestao) => void,
+    onEditQuestao: (questao: IQuestao) => void
+    questaoEditarCard?: IQuestao
 }
 export interface IAlternativas {
     ordem: number,
@@ -14,7 +17,7 @@ export interface IQuestao{
     alternativas : IAlternativas[]
 }
 
-export const EditQuestaoCard: React.FC<IEditQuestaoCard> = ({ }) => {
+export const EditQuestaoCard: React.FC<IEditQuestaoCard> = ({ onAddQuestao, questaoEditarCard, onEditQuestao }) => {
 
     const [alternativas, setAlternativas] = useState<IAlternativas[]>([
         { resposta: 'america latina', correta: true, ordem: 1 }, { resposta: 'texas', correta: false, ordem: 2 }
@@ -25,8 +28,15 @@ export const EditQuestaoCard: React.FC<IEditQuestaoCard> = ({ }) => {
     const [pergunta, setPergunta] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
 
+    useEffect(()=>{
+        if(questaoEditarCard){
+            setPergunta(questaoEditarCard.pergunta)
+            setAlternativas(questaoEditarCard.alternativas)
+            
+        }
+    },[questaoEditarCard])
+
     const addAlternativa = () => {
-        console.log(alternativas.length)
         if (alternativas.length > 4) {
             toast.error('Não é possível adicionar mais do que 5 alternativas.')
             return
@@ -60,8 +70,6 @@ export const EditQuestaoCard: React.FC<IEditQuestaoCard> = ({ }) => {
             }
         })
         setAlternativas(newAlternativas)
-
-
     }
 
     const handleChangeResposta = (resposta: string, ordem: number) => {
@@ -78,26 +86,64 @@ export const EditQuestaoCard: React.FC<IEditQuestaoCard> = ({ }) => {
                 return a.ordem - b.ordem;
             }))
         }
+    }
+
+    const handleChangeCheckbox = (checked : boolean, ordem: number) =>{
+        let editAlternativa = alternativas.find((alternativa) => {
+            return alternativa.ordem === ordem
+        })
+        if (editAlternativa) {
+            editAlternativa.correta = checked
+            let newAlternativas = alternativas.filter((alternativa) => {
+                return alternativa.ordem !== ordem
+            })
+            newAlternativas.push(editAlternativa)
+            setAlternativas(newAlternativas.sort((a, b) => {
+                return a.ordem - b.ordem;
+            }))
+        }
 
     }
 
     const salvarQuestao = () =>{
-        if(alternativas.length<2){
-            toast.error('Você deve adicionar pelo menos duas respostas.')
-            return
-        }
         let respostasCorretas = alternativas.filter((alternativa)=>{
-            return alternativa.correta
+            return alternativa.correta === true
         })
+        let alternativasSemResposta = alternativas.filter((alternativa)=>{
+            return alternativa.resposta === ''
+        })
+
         if(respostasCorretas.length > 1){
             toast.error('Você deve escolher somente uma questão como certa.')
             return
         }
-        if(respostasCorretas.length < 1){
+        if(respostasCorretas.length === 0){
             toast.error('Você deve escolher uma questão como certa.')
             return
         }
+        if(pergunta === ''){
+            toast.error('Você deve digitar a pergunta.')
+            return
+        }
+        if(alternativasSemResposta.length > 0){
+            toast.error('Você não digitou todas as respostas.')
+            return
+        }
 
+        let questao : IQuestao = {
+            pergunta: pergunta,
+            alternativas: alternativas
+        }
+        if(!questaoEditarCard){
+            onAddQuestao(questao)
+            toast.success('Questão adicionada.')
+        }else{
+            onEditQuestao(questao)
+            toast.success('Questão editada.')
+        }
+
+        setAlternativas([])
+        setPergunta('')
     }
 
     return (
@@ -130,7 +176,7 @@ export const EditQuestaoCard: React.FC<IEditQuestaoCard> = ({ }) => {
                                 </label>
                             </div>
                             <div className="flex items-center">
-                                <input type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:outline-none cursor-pointer" />
+                                <input checked={alternativa.correta} onChange={(e)=>{ handleChangeCheckbox(e.target.checked, alternativa.ordem)}} type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:outline-none cursor-pointer" />
                                 <label className="ml-2 text-sm text-gray-700  font-bold ">Correta</label>
                             </div>
                         </div>
@@ -146,7 +192,7 @@ export const EditQuestaoCard: React.FC<IEditQuestaoCard> = ({ }) => {
 
                 <div className="h-full flex items-end justify-center">
                     <button onClick={()=>{salvarQuestao()}} className="bg-white hover:bg-slate-300 mb-2 font-bold py-1 px-3 rounded-full">
-                        Salvar
+                        { questaoEditarCard ? 'Editar':'Adicionar'}
                     </button>
                 </div>
             </div>

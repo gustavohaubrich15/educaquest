@@ -29,6 +29,7 @@ export const LoginScreen: React.FC = () => {
                 
             }).catch((error) => {
                 toast.error(`Ocorreu o seguinte erro ao logar : ${error.e}`)
+                return
             });
     }
 

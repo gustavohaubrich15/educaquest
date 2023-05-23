@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import 'react-toastify/dist/ReactToastify.css';
 import { UsuarioLogadoContext } from '../context/UsuarioLogadoContext';
 import usuarioDefault from '../images/usuarioDefault.png'
@@ -16,17 +16,9 @@ interface INavSlider {
 
 export const NavSlider: React.FC<INavSlider> = () => {
     const { usuarioLogado, changeUsuarioLogado } = useContext(UsuarioLogadoContext)
-    const { pathname, state } = useLocation()
+    const { pathname } = useLocation()
     const navigate = useNavigate()
     const [open, setOpen] = useState<boolean>(false)
-
-    useEffect(() => {
-        if (state) {
-            setOpen(state)
-        }
-    }, [])
-
-
 
     return (
         <>
@@ -44,8 +36,8 @@ export const NavSlider: React.FC<INavSlider> = () => {
                         <div className=" flex flex-col w-full h-screen space-y-10 items-center">
                             <div className="flex flex-col space-y-2 text-center">
                                 <div className="rounded-full bg-white flex  justify-center items-center md:w-24 md:h-24">
-                                    {usuarioLogado?.foto ? <img src={usuarioLogado?.foto} referrerPolicy="no-referrer" className="w-6 h-6 rounded-full md:w-20 md:h-20"></img> :
-                                        <img src={usuarioDefault} className="w-6 h-6 rounded-full md:w-20 md:h-20" ></img>}
+                                    {usuarioLogado?.foto ? <img src={usuarioLogado?.foto} alt="Usuário logado" referrerPolicy="no-referrer" className="w-6 h-6 rounded-full md:w-20 md:h-20"></img> :
+                                        <img src={usuarioDefault} alt="Usuário logado" className="w-6 h-6 rounded-full md:w-20 md:h-20" ></img>}
 
                                 </div>
                                 <div className="hidden font-bold md:flex md:justify-center">{usuarioLogado?.nome ?? ''}</div>
@@ -76,8 +68,8 @@ export const NavSlider: React.FC<INavSlider> = () => {
                         <div className=" flex flex-col w-full h-screen space-y-10 items-center">
                             <div className="flex flex-col space-y-2 text-center">
                                 <div className="rounded-full bg-white flex  justify-center items-center w-24 h-24 md:w-10 md:h-10">
-                                    {usuarioLogado?.foto ? <img src={usuarioLogado?.foto} referrerPolicy="no-referrer" className="w-20 h-20 rounded-full md:w-10 md:h-10"></img> :
-                                        <img src={usuarioDefault} className="w-20 h-20 rounded-full md:w-6 md:h-6" ></img>}
+                                    {usuarioLogado?.foto ? <img alt="Usuário logado" src={usuarioLogado?.foto} referrerPolicy="no-referrer" className="w-20 h-20 rounded-full md:w-10 md:h-10"></img> :
+                                        <img src={usuarioDefault} alt="Usuário logado" className="w-20 h-20 rounded-full md:w-6 md:h-6" ></img>}
 
                                 </div>
                                 <div className="font-bold md:hidden flex justify-center">{usuarioLogado?.nome ?? ''}</div>

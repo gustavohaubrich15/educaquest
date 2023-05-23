@@ -4,9 +4,11 @@ import { RoutesApp } from './routes/RoutesApp';
 import { Container } from './shared/components/Container';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from './firebase/firebaseConfig';
+import firebase, { getFirestore } from "firebase/firestore";
 import { UsuarioLogadoProvider } from './shared/context/UsuarioLogadoContext';
 
-initializeApp(firebaseConfig.config)
+const app = initializeApp(firebaseConfig.config)
+export const databaseFirebase = getFirestore();
 export const App: React.FC = () => {
 
   useEffect(() => {
