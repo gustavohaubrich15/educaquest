@@ -12,11 +12,11 @@ export const ProgressBarQuestion: React.FC<IProgressBarQuestion> = ({questoes, a
     useEffect(()=>{
         let valor = (210*(ativa+1))/(questoes.length)
         setClassBar(String(valor))
-    },[])
+    },[ativa, questoes])
 
     return (
         <>
-            <div className="flex w-4/5 justify-between items-center h-10">
+            <div className="flex w-4/5 justify-between items-center h-10 md:hidden">
                 <div className="w-[210px] h-2 rounded bg-white">
                     {classBar !== '' && <div className="bg-green-500 h-2 rounded" style={{width:`${classBar}px`}}></div>}
                 </div>
