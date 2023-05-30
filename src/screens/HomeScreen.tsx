@@ -61,6 +61,7 @@ export const HomeScreen: React.FC = () => {
                 descricao: trilha.descricao,
                 numeroPerguntas: trilha.questoes.length,
                 onEdit: () => {},
+                onIniciarQuiz : () => {}
             }
         }))
         setPaginateFrom(0)
@@ -98,8 +99,10 @@ export const HomeScreen: React.FC = () => {
                             descricao={trilha.descricao}
                             numeroPerguntas={trilha.numeroPerguntas}
                             onEdit={(id: string)=>{
-                                console.log(id)
                                 navigate('/trilhas', { state: id })
+                            }}
+                            onIniciarQuiz={(id: string)=>{
+                                navigate('/quizAdmin', { state: id })
                             }}
                             />
                     })}

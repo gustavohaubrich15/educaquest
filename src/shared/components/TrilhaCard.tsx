@@ -6,8 +6,9 @@ export interface ITrilhaCard {
     descricao: string,
     numeroPerguntas: number
     onEdit : (id: string) => void
+    onIniciarQuiz : (id: string) => void
 }
-export const TrilhaCard: React.FC<ITrilhaCard> = ({id, titulo, descricao, numeroPerguntas, onEdit}) => {
+export const TrilhaCard: React.FC<ITrilhaCard> = ({id, titulo, descricao, numeroPerguntas, onEdit, onIniciarQuiz}) => {
 
     return (
         <>
@@ -24,8 +25,8 @@ export const TrilhaCard: React.FC<ITrilhaCard> = ({id, titulo, descricao, numero
                 </div>
                 <div className="h-full w-full flex flex-col justify-end">
                 <div className="pl-5 pr-5 pb-2 flex justify-between ">
-                    <div onClick={()=>{onEdit(id)}} className="bg-white w-14 h-7 rounded-lg text-black text-base hover:bg-gray-300 flex justify-center items-center cursor-pointer">Editar</div>
-                    <div className="bg-white w-28 h-7 rounded-lg text-black text-base hover:bg-gray-300 flex justify-center items-center cursor-pointer">Iniciar Quiz</div>
+                    <div onClick={()=>{onEdit(id)}} className="bg-white w-14 h-7 rounded-lg text-black text-base hover:bg-gray-300 justify-center items-center cursor-pointer hidden md:flex">Editar</div>
+                    <div onClick={()=>{onIniciarQuiz(id)}} className="bg-white w-28 h-7 rounded-lg text-black text-base hover:bg-gray-300 flex justify-center items-center cursor-pointer">Iniciar Quiz</div>
                 </div>
                 </div>
                 
