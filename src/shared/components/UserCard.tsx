@@ -11,7 +11,7 @@ export const UserCard: React.FC<IUserCard> = ({nome, color}) => {
         <>
             <div className="flex flex-col justify-center items-center mt-3">
                 <CellPhoneIcon fill={color}/>
-                <div className=""><div className={`bg-${color}-500 rounded px-2`}>{nome}</div></div>
+                <div className=""><div className="rounded px-2" style={{backgroundColor:color}}>{nome.toUpperCase()}</div></div>
             </div>
         </>
     )

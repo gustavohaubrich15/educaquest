@@ -16,11 +16,11 @@ export const ProgressBarQuestion: React.FC<IProgressBarQuestion> = ({questoes, a
 
     return (
         <>
-            <div className="flex w-4/5 justify-between items-center h-10 md:hidden">
+            <div className="flex w-4/5 justify-between items-center h-10 md:justify-center">
                 <div className="w-[210px] h-2 rounded bg-white">
                     {classBar !== '' && <div className="bg-green-500 h-2 rounded" style={{width:`${classBar}px`}}></div>}
                 </div>
-                <div>{`${ativa+1}/${questoes.length}`}</div>
+                <div className="md:pl-5">{`${ativa+1}/${questoes.length}`}</div>
             </div>
         </>
     )
