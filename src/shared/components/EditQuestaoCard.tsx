@@ -19,12 +19,7 @@ export interface IQuestao{
 
 export const EditQuestaoCard: React.FC<IEditQuestaoCard> = ({ onAddQuestao, questaoEditarCard, onEditQuestao }) => {
 
-    const [alternativas, setAlternativas] = useState<IAlternativas[]>([
-        { resposta: 'america latina', correta: true, ordem: 1 }, { resposta: 'texas', correta: false, ordem: 2 }
-        , { resposta: 'Nova york', correta: false, ordem: 3 }
-        , { resposta: 'Campinas', correta: false, ordem: 4 }
-        , { resposta: 'Panamá', correta: false, ordem: 5 }
-    ])
+    const [alternativas, setAlternativas] = useState<IAlternativas[]>([])
     const [pergunta, setPergunta] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
 
