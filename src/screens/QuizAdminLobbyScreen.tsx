@@ -25,7 +25,7 @@ export const QuizAdminLobbyScreen: React.FC<IQuizAdminLobbyScreen> = ({roomNumbe
 
                 <div className="md:flex md:justify-evenly md:flex-wrap md:w-[90%] hidden">
                     {
-                        usersInfo.map((usuario, index) => {
+                       usersInfo !== undefined && usersInfo.map((usuario, index) => {
                             return <>
                                 <UserCard key={index} nome={usuario.nome} color={usuario.color} />
                             </>

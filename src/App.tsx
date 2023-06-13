@@ -4,7 +4,7 @@ import { RoutesApp } from './routes/RoutesApp';
 import { Container } from './shared/components/Container';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from './firebase/firebaseConfig';
-import firebase, { getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import { UsuarioLogadoProvider } from './shared/context/UsuarioLogadoContext';
 
 const app = initializeApp(firebaseConfig.config)

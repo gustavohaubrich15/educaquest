@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { RankingCard } from './RankingCard';
 import { IUsersInfo } from '../../screens/QuizAdminScreen';
 import { IQuestao } from './EditQuestaoCard';
@@ -11,7 +11,6 @@ interface IRankingFinal {
     questoes: IQuestao[]
 }
 export const RankingFinal: React.FC<IRankingFinal> = ({ usersInfo, questoes }) => {
-
     const sortedUsers = usersInfo.sort((a, b) => {
         const aCorrectAnswers = a.respostas.filter((resposta, index) => {
             return questoes[index].alternativas.findIndex(alternativa => alternativa.correta === true) === resposta.resposta - 1
@@ -26,7 +25,7 @@ export const RankingFinal: React.FC<IRankingFinal> = ({ usersInfo, questoes }) =
 
     return (
         <>  
-            <Confetti/>
+            <Confetti style={{width:'100%'}}  />
             <div className="md:w-[80%] md:h-[70%] flex pt-2 pb-2 justify-center">
                 {sortedUsers.length > 0 && sortedUsers.slice(0,3).map((usuario, index) => {
                     return <WinnerCard usuario={usuario} key={index} index={index} />

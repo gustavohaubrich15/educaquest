@@ -6,15 +6,19 @@ import { AnswerCard } from '../shared/components/AnswerCard';
 import { Ranking } from '../shared/components/Ranking';
 import { IUsersInfo } from './QuizAdminScreen';
 import { RankingFinal } from '../shared/components/RankingFinal';
+import { Socket } from 'socket.io-client';
 
 
 export interface IQuizAdminQuestScreen {
     questoes: IQuestao[],
     usersInfo: IUsersInfo[],
-    onChangePoints: (usuarios: IUsersInfo[]) => void
+    onChangePoints: (usuarios: IUsersInfo[]) => void,
+    socket: Socket,
+    roomNumber: string,
+    onChangeQuestion: (questaoAtiva: number) => void
 }
 
-export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes, usersInfo, onChangePoints }) => {
+export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes, usersInfo, onChangePoints, socket, roomNumber, onChangeQuestion }) => {
 
     const [questaoAtiva, setQuestaoAtiva] = useState<number>(0)
     const [exibirCorreta, setExibirCorreta] = useState<boolean>(false)
@@ -34,12 +38,15 @@ export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes
             
             return {
                 ...usuario,
-                corretas : usuario.respostas.filter((resposta, index)=> resposta.resposta == corretas[index] && index<= questaoAtiva).length 
+                corretas : usuario.respostas.filter((resposta, index)=> resposta.resposta === corretas[index] && index<= questaoAtiva).length 
             }
         })
         onChangePoints(calculatedPoints)
     },[exibirRanking])
 
+    useEffect(()=>{
+        socket.emit('startQuestion', roomNumber, questoes[questaoAtiva], questaoAtiva)
+    },[])
 
     return (
         <>
@@ -64,16 +71,21 @@ export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes
             }
 
             <div className="h-full flex items-end md:pb-10 space-x-2 flex-wrap pb-2">
-                {!exibirRanking && !finalizarQuiz && <Button onClick={() => setExibirCorreta(true)} descricao="Exibir Correta" />}
+                {!exibirRanking && !finalizarQuiz && <Button onClick={() => {
+                    setExibirCorreta(true)
+                    socket.emit('showCorrect', roomNumber, questoes[questaoAtiva])
+                }} descricao="Exibir Correta" />}
                 {exibirRanking && <Button onClick={() => setExibirRanking(false)} descricao="Voltar" />}
                 {!exibirRanking && exibirCorreta && !finalizarQuiz && <Button onClick={() => setExibirRanking(true)} descricao="Exibir Ranking" />}
                 {questoes.length - 1 > questaoAtiva && exibirCorreta && <Button onClick={() => {
+                    onChangeQuestion(questaoAtiva)
                     let proxima = questaoAtiva + 1
                     setQuestaoAtiva(proxima)
                     setLoading(true)
                     setTimeout(() => { setLoading(false) }, 10);
                     setExibirCorreta(false)
                     setExibirRanking(false)
+                    socket.emit('startQuestion', roomNumber, questoes[proxima], proxima)
                 }} descricao="Próxima pergunta" />}
                 {questoes.length - 1 <= questaoAtiva && exibirCorreta && !finalizarQuiz && <Button onClick={() => setFinalizarQuiz(true)} descricao="Finalizar Quiz" />}
             </div>
