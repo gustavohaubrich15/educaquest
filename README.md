@@ -22,4 +22,6 @@ $ npm start
 ```
 ![image](https://github.com/gustavohaubrich15/educaquest/assets/22485428/a7df39c4-f4fe-408c-9cee-2e14b407121e)
 
+* [Acesse aqui o backend da aplicação](https://github.com/gustavohaubrich15/educaquestBackend/tree/main) 
+
 
