@@ -21,8 +21,11 @@ export const QuizScreen: React.FC = () => {
     const [respostaCorreta, setRespostaCorreta] = useState<number>(0)
     const [questaoAtiva, setQuestaoAtiva] = useState<string>('')
     const [onlineUsers, setOnlineUsers] = useState<number>(0)
+    const [user, setUser] = useState<IUsersInfo>()
+    const [position, setPosition] = useState<number>(0)
 
     const entrarNaSala = (userInfo: IUsersInfo, codigoSalaEmit: string) => {
+        setUser(userInfo)
         socket.emit('joinRoom', codigoSalaEmit, userInfo, (response: IResponse) => {
             if (!response.status) {
                 toast.error(response.mensagem)
@@ -53,6 +56,15 @@ export const QuizScreen: React.FC = () => {
         setOnlineUsers(Number(users))
     })
 
+    socket.on('userPosition', (usersInfo: string)=>{
+        const parsedUsersInfo: IUsersInfo[] = JSON.parse(usersInfo);
+        let position = parsedUsersInfo.findIndex((userIndex)=>{
+            return userIndex.nome == user?.nome
+        })
+        if(position > -1){
+            setPosition(Number(position)+1)
+        }
+    })
 
     return (
         <>
@@ -60,13 +72,21 @@ export const QuizScreen: React.FC = () => {
 
             {entrouNaSala && !iniciarPergunta && <LobbyQuizWaiting onlineUsers={onlineUsers} />}
 
-            {entrouNaSala && iniciarPergunta && !loading && <QuestionQuiz onChangeResposta={(resposta: number) => {
+            {entrouNaSala && iniciarPergunta && !loading && position === 0 && <QuestionQuiz onChangeResposta={(resposta: number) => {
                 
                 if (resposta > 0) {
                     socket.emit('answerQuestion', codigoSala, resposta, questaoAtiva)
                     console.log('chamou resposta')
                 }
             }} mostrarCorreta={mostrarCorreta} respostaCorreta={respostaCorreta} questao={questao} />}
+
+            {position > 0 && <div  className={`w-full h-full rounded-md items-center flex flex-col space-y-4 pb-20 justify-center`}>
+                    <div className="text-3xl md:text-3xl ">Você ficou no </div>
+                    { position===1 && <div style={{color : 'gold'}} className="text-4xl md:text-5xl font-bold ">{position}º lugar</div>}
+                    { position===2 && <div style={{color : 'silver'}} className="text-4xl md:text-5xl font-bold ">{position}º lugar</div>}
+                    { position===3 && <div style={{color : '#cd7f32'}} className="text-4xl md:text-5xl font-bold ">{position}º lugar</div>}
+                    { position > 3 && <div className="text-4xl md:text-5xl font-bold ">{position}º lugar</div>}
+                </div>}
         </>
     )
 

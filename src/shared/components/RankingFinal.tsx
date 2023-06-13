@@ -1,16 +1,26 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { RankingCard } from './RankingCard';
 import { IUsersInfo } from '../../screens/QuizAdminScreen';
 import { IQuestao } from './EditQuestaoCard';
 import { WinnerCard } from './WinnerCard';
 import Confetti from 'react-confetti'
+import { Socket } from 'socket.io-client';
+import { toast } from 'react-toastify';
+import { addDoc, collection } from "firebase/firestore";
+import { databaseFirebase } from '../../App'
+import { UsuarioLogadoContext } from '../context/UsuarioLogadoContext';
 
 
 interface IRankingFinal {
     usersInfo: IUsersInfo[],
-    questoes: IQuestao[]
+    questoes: IQuestao[],
+    socket : Socket,
+    roomNumber: string,
+    trilhaId: string
 }
-export const RankingFinal: React.FC<IRankingFinal> = ({ usersInfo, questoes }) => {
+export const RankingFinal: React.FC<IRankingFinal> = ({ usersInfo, questoes, socket, roomNumber, trilhaId }) => {
+    const { usuarioLogado } = useContext(UsuarioLogadoContext)
+
     const sortedUsers = usersInfo.sort((a, b) => {
         const aCorrectAnswers = a.respostas.filter((resposta, index) => {
             return questoes[index].alternativas.findIndex(alternativa => alternativa.correta === true) === resposta.resposta - 1
@@ -22,6 +32,27 @@ export const RankingFinal: React.FC<IRankingFinal> = ({ usersInfo, questoes }) =
         return bCorrectAnswers - aCorrectAnswers;
     });
 
+    
+    const adicionarEstatistica = async() =>{
+        try {
+
+            let usuarioId = usuarioLogado?.uid
+
+            await addDoc(collection(databaseFirebase, "quizRealizado"), {
+                usuarioId: usuarioId,
+                trilhaId: trilhaId,
+                usuariosRanking: sortedUsers
+            });
+            toast.success('Quiz Finalizado');
+        } catch (error) {
+            toast.error('Erro ao finalizar quiz.');
+        }
+    }
+
+    if(sortedUsers){
+        socket.emit('finishQuiz', roomNumber, sortedUsers)
+        adicionarEstatistica()
+    }
 
     return (
         <>  

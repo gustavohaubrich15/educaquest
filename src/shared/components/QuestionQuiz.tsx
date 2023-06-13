@@ -23,7 +23,7 @@ export const QuestionQuiz: React.FC<IQuestionQuiz> = ({  questao, mostrarCorreta
 
     return (
         <>
-            <div className="flex flex-col space-y-1 pt-5 justify-start items-center font-bold text-white h-full w-full md:pl-24">
+            <div className="flex flex-col space-y-1 pt-5 justify-start items-center font-bold text-white h-full w-full md:pl-24 md:py-5">
                 <div className="h-18 text-gray-700 pb-6 leading-tight font-semibold text-lg md:text-3xl  w-3/4 justify-center flex text-center" >
                     {questao && questao.pergunta}
                 </div>

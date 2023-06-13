@@ -11,7 +11,6 @@ interface IRanking {
 export const Ranking: React.FC<IRanking> = ({ usersInfo, questoes, questaoAtiva }) => {
 
     const sortedUsers = usersInfo.sort((a, b) => {
-        console.log(questoes)
         const aCorrectAnswers = a.respostas.filter((resposta, index)=>{
             return questoes[index].alternativas.findIndex(alternativa => alternativa.correta === true) === resposta.resposta-1
         }).length

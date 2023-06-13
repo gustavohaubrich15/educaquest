@@ -15,10 +15,11 @@ export interface IQuizAdminQuestScreen {
     onChangePoints: (usuarios: IUsersInfo[]) => void,
     socket: Socket,
     roomNumber: string,
-    onChangeQuestion: (questaoAtiva: number) => void
+    onChangeQuestion: (questaoAtiva: number) => void,
+    trilhaId: string
 }
 
-export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes, usersInfo, onChangePoints, socket, roomNumber, onChangeQuestion }) => {
+export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes, usersInfo, onChangePoints, socket, roomNumber, onChangeQuestion, trilhaId }) => {
 
     const [questaoAtiva, setQuestaoAtiva] = useState<number>(0)
     const [exibirCorreta, setExibirCorreta] = useState<boolean>(false)
@@ -51,7 +52,7 @@ export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes
     return (
         <>
             {!loading && !finalizarQuiz && !exibirRanking && questoes.length > questaoAtiva && <ProgressBarQuestion questoes={questoes} ativa={questaoAtiva} />}
-            {!loading && !finalizarQuiz && !exibirRanking && questoes[questaoAtiva] !== undefined && <div className="h-18 text-gray-700 pb-6 leading-tight font-semibold md:text-3xl w-3/4 justify-center flex text-center" >
+            {!loading && !finalizarQuiz && !exibirRanking && questoes[questaoAtiva] !== undefined && <div className="h-18 text-gray-700 pb-6 leading-tight  font-semibold md:text-3xl w-3/4 justify-center flex text-center" >
                 {questoes[questaoAtiva].pergunta}
             </div>}
             {
@@ -67,7 +68,7 @@ export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes
             }
 
             {
-                !loading && finalizarQuiz && !exibirRanking && <RankingFinal usersInfo={usersInfo} questoes={questoes}/>
+                !loading && finalizarQuiz && <RankingFinal trilhaId={trilhaId} socket={socket} roomNumber={roomNumber} usersInfo={usersInfo} questoes={questoes}/>
             }
 
             <div className="h-full flex items-end md:pb-10 space-x-2 flex-wrap pb-2">
@@ -75,7 +76,7 @@ export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes
                     setExibirCorreta(true)
                     socket.emit('showCorrect', roomNumber, questoes[questaoAtiva])
                 }} descricao="Exibir Correta" />}
-                {exibirRanking && <Button onClick={() => setExibirRanking(false)} descricao="Voltar" />}
+                {exibirRanking && !finalizarQuiz && <Button onClick={() => setExibirRanking(false)} descricao="Voltar" />}
                 {!exibirRanking && exibirCorreta && !finalizarQuiz && <Button onClick={() => setExibirRanking(true)} descricao="Exibir Ranking" />}
                 {questoes.length - 1 > questaoAtiva && exibirCorreta && <Button onClick={() => {
                     onChangeQuestion(questaoAtiva)

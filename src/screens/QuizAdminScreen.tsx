@@ -34,6 +34,7 @@ export const QuizAdminScreen: React.FC = () => {
     const [roomNumber, setRoomNumber] = useState<string>('')
     const [iniciar, setIniciar] = useState<boolean>(false)
     const [usersInfo, setUsersInfo] = useState<IUsersInfo[]>([])
+    const [trilhaId, setTrilhaId] = useState<string>()
 
     useEffect(() => {
         if (location.state) {
@@ -45,7 +46,7 @@ export const QuizAdminScreen: React.FC = () => {
     const getTrilha = async () => {
         const documentRef = doc(databaseFirebase, "trilhas", location.state)
         const trilhaFirebase = await getDoc(documentRef)
-
+        setTrilhaId(location.state)
         if (trilhaFirebase.exists()) {
             let trilha = trilhaFirebase.data()
             setTitulo(trilha.titulo)
@@ -101,7 +102,7 @@ export const QuizAdminScreen: React.FC = () => {
                     setIniciar(valor)
                     socket.emit('startRoom', roomNumber)
                 }} roomNumber={Number(roomNumber)} titulo={titulo} usersInfo={usersInfo} />}
-                {iniciar && <QuizAdminQuestScreen onChangeQuestion={(questaoAtiva: number) => changeQuestion(questaoAtiva)} roomNumber={roomNumber} socket={socket} questoes={questoes} usersInfo={usersInfo} onChangePoints={(usuarios) => setUsersInfo(usuarios)} />}
+                {iniciar && <QuizAdminQuestScreen trilhaId={trilhaId ?? ''} onChangeQuestion={(questaoAtiva: number) => changeQuestion(questaoAtiva)} roomNumber={roomNumber} socket={socket} questoes={questoes} usersInfo={usersInfo} onChangePoints={(usuarios) => setUsersInfo(usuarios)} />}
 
             </div>
         </>
