@@ -100,7 +100,7 @@ export const TrilhaScreen: React.FC = () => {
             return
         }
 
-        if (location.state !== '') {
+        if (location.state !== '' && location.state !== null) {
 
             try {
 
