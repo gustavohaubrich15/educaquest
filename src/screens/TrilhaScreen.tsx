@@ -26,7 +26,7 @@ export const TrilhaScreen: React.FC = () => {
     const [descricao, setDescricao] = useState<string>('')
     const [questoes, setQuestoes] = useState<IQuestao[]>([])
     const [paginateFrom, setPaginateFrom] = useState(0)
-    const [paginateTo, setPaginateTo] = useState(6)
+    const [paginateTo, setPaginateTo] = useState(2)
     const [loading, setLoading] = useState<boolean>(false)
     const [questaoEditarCard, setQuestaoEditarCard] = useState<IQuestao>()
     const [indexQuestaoEditarCard, setindexQuestaoEditarCard] = useState<number>(0)
@@ -53,13 +53,13 @@ export const TrilhaScreen: React.FC = () => {
 
     const PaginaAnterior = () => {
 
-        setPaginateFrom((prevValue) => prevValue - 6)
-        setPaginateTo((prevValue) => prevValue - 6)
+        setPaginateFrom((prevValue) => prevValue - 2)
+        setPaginateTo((prevValue) => prevValue - 2)
     };
 
     const ProximaPagina = () => {
-        setPaginateFrom((prevValue) => prevValue + 6)
-        setPaginateTo((prevValue) => prevValue + 6)
+        setPaginateFrom((prevValue) => prevValue + 2)
+        setPaginateTo((prevValue) => prevValue + 2)
     };
 
     const adicionarQuestao = (questao: IQuestao) => {
@@ -115,6 +115,7 @@ export const TrilhaScreen: React.FC = () => {
                 toast.success('Trilha editada com sucesso!');
                 navigate('/home')
             } catch (error) {
+                console.log(error)
                 toast.error('Erro ao adicionar a trilha.');
             }
         } else {
@@ -132,6 +133,7 @@ export const TrilhaScreen: React.FC = () => {
                 toast.success('Trilha adicionada com sucesso!');
                 navigate('/home')
             } catch (error) {
+                console.log(error)
                 toast.error('Erro ao adicionar a trilha.');
             }
 
@@ -170,7 +172,7 @@ export const TrilhaScreen: React.FC = () => {
 
                     </div>
 
-                    <div className=" flex flex-col  space-y-2 pt-5 justify-center items-center font-bold text-white   flex-wrap">
+                    <div className=" flex flex-col  space-y-2  justify-center items-center font-bold text-white   flex-wrap">
 
                         <div className=" flex-row  flex flex-wrap justify-center space-x-5">
                             {!loading && questoes.slice(paginateFrom, paginateTo).map((questao, index) => {
@@ -184,7 +186,7 @@ export const TrilhaScreen: React.FC = () => {
                         </div>
 
                         <div className=" w-full flex justify-center pb-2 space-x-2">
-                            {paginateTo > 6 && <Button descricao="< Anterior" onClick={PaginaAnterior} />}
+                            {paginateTo > 2 && <Button descricao="< Anterior" onClick={PaginaAnterior} />}
                             {questoes.length > paginateTo && <Button descricao="Próxima >" onClick={ProximaPagina} />}
                         </div>
 
