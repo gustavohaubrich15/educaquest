@@ -26,7 +26,7 @@ export const ChartBarTotalTrilha: React.FC<IChartBarTotalTrilha> = ({ trilhas, q
                 })
             }
 
-            quizFiltered.slice(-3).forEach((quiz) => {
+            quizFiltered.forEach((quiz) => {
                 let totalAcertos = 0
                 let quizUsuariosFiltered = quiz.usuariosRanking
 
@@ -43,7 +43,7 @@ export const ChartBarTotalTrilha: React.FC<IChartBarTotalTrilha> = ({ trilhas, q
                     return tri.id == quiz.trilhaId
                 })
 
-                if (trilha.length > 0 && quizUsuariosFiltered.length > 0) {
+                if (trilha.length > 0 && quizUsuariosFiltered.length > 0 && dataChart.length < 3) {
                     dataChart.push({
                         name: trilha[0].titulo,
                         acertos: totalAcertos,
