@@ -94,7 +94,7 @@ export const EstatisticasScreen: React.FC = () => {
             <NavSlider />
             <div className="flex flex-col space-y-1 pt-5 justify-start items-center font-bold text-white h-full w-full md:pl-24">
                 ESTATÍSTICAS
-                <div className="flex space-x-5 pt-5 justify-start items-start text-lg font-bold w-full md:pl-40">
+                <div className="hidden md:flex space-x-5 pt-5 justify-start items-start text-lg font-bold w-full md:pl-40">
 
                     <div>
                         <FilterSelect title={"Filtre por trilha"} titleAll={"Todas trilhas selecionadas"} options={mappedOptionTrilha}
@@ -118,9 +118,13 @@ export const EstatisticasScreen: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="max-h-full max-w-full flex flex-wrap pt-10">
+                <div className="max-h-full max-w-full flex-wrap pt-10 md:flex hidden">
                     <ChartBarTotalTrilha trilhas={trilhas} alunosFiltered={alunosFiltered} quizRealizado={quizRealizado} trilhasFiltered={trilhasFiltered} />
                     
+                </div>
+
+                <div className="md:hidden flex justify-center items-center h-full px-10 text-center">
+                            Para acessar as estatísticas utilize um computador....
                 </div>
 
             </div>

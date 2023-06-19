@@ -76,7 +76,6 @@ export const QuizScreen: React.FC = () => {
                 
                 if (resposta > 0) {
                     socket.emit('answerQuestion', codigoSala, resposta, questaoAtiva)
-                    console.log('chamou resposta')
                 }
             }} mostrarCorreta={mostrarCorreta} respostaCorreta={respostaCorreta} questao={questao} />}
 

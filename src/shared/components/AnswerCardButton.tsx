@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ReactComponent as CorrectIcon } from '../images/correct.svg'
 import { ReactComponent as ChooseIcon } from '../images/choose.svg'
+import { ReactComponent as WrongIcon } from '../images/wrong.svg'
 
 export interface IAnswerCardButton {
     resposta: string,
@@ -21,8 +22,14 @@ export const AnswerCardButton: React.FC<IAnswerCardButton> = ({resposta, ordem, 
                
             </button>}
 
-            {((mostrarCorreta && respostaCorreta !== ordem) || !mostrarCorreta) && respostaSelected === ordem && <button disabled={respostaSelected !== 0} onClick={()=>{onChangeSelected(ordem)}} className="flex w-50 h-16 md:h-32  md:w-2/4 md:justify-start bg-gray-600 rounded justify-center items-center pl-2">
+            {((!mostrarCorreta && respostaCorreta !== ordem)) && respostaSelected === ordem && <button disabled={respostaSelected !== 0} onClick={()=>{onChangeSelected(ordem)}} className="flex w-50 h-16 md:h-32  md:w-2/4 md:justify-start bg-gray-600 rounded justify-center items-center pl-2">
                 <div className="h-12 w-12 bg-white rounded-full md:rounded flex items-center justify-center "> <ChooseIcon className="md:mt-2 h-9 w-9" /></div>
+                <p className="w-56 pl-1 text-xs md:text-base md:w-full md:h-16 h-14 flex justify-center items-center text-white">{resposta}</p>
+               
+            </button>}
+
+            {((mostrarCorreta && respostaCorreta !== ordem)) && respostaSelected === ordem && <button disabled={respostaSelected !== 0} onClick={()=>{onChangeSelected(ordem)}} className="flex w-50 h-16 md:h-32  md:w-2/4 md:justify-start bg-red-600 rounded justify-center items-center pl-2">
+                <div className="h-12 w-12 bg-white rounded-full md:rounded flex items-center justify-center "> <WrongIcon fill="red" className="md:mt-2 h-9 w-9" /></div>
                 <p className="w-56 pl-1 text-xs md:text-base md:w-full md:h-16 h-14 flex justify-center items-center text-white">{resposta}</p>
                
             </button>}

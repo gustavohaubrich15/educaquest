@@ -33,7 +33,7 @@ export const QuizAdminLobbyScreen: React.FC<IQuizAdminLobbyScreen> = ({roomNumbe
                     }
                 </div>
 
-                <div className="h-full flex items-end pb-10">
+                <div className="h-full flex items-end pb-32 md:pb-10">
                      <Button onClick={()=>onChangeIniciar(true)} descricao="Iniciar" />
                 </div>
         </>

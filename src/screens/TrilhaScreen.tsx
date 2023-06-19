@@ -115,7 +115,6 @@ export const TrilhaScreen: React.FC = () => {
                 toast.success('Trilha editada com sucesso!');
                 navigate('/home')
             } catch (error) {
-                console.log(error)
                 toast.error('Erro ao adicionar a trilha.');
             }
         } else {
@@ -133,7 +132,6 @@ export const TrilhaScreen: React.FC = () => {
                 toast.success('Trilha adicionada com sucesso!');
                 navigate('/home')
             } catch (error) {
-                console.log(error)
                 toast.error('Erro ao adicionar a trilha.');
             }
 
@@ -143,7 +141,7 @@ export const TrilhaScreen: React.FC = () => {
     return (
         <>
             <NavSlider />
-            <div className="flex space-x-2 justify-center items-center pl-32">
+            <div className="hidden md:flex space-x-2 justify-center items-center pl-32">
                 <EditQuestaoCard questaoEditarCard={questaoEditarCard} onAddQuestao={(questao: IQuestao) => { adicionarQuestao(questao) }} onEditQuestao={(questao: IQuestao) => { editarQuestao(questao) }} />
 
                 <div className="flex flex-col space-y-5 w-[55vw] h-screen">
@@ -192,6 +190,9 @@ export const TrilhaScreen: React.FC = () => {
 
                     </div>
                 </div>
+            </div>
+            <div className="md:hidden flex justify-center pb-20 items-center h-full pr-20 text-center text-white">
+                            Para criar uma nova trilha utilize um computador....
             </div>
         </>
     )

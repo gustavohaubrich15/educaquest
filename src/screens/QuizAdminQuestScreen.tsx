@@ -71,7 +71,7 @@ export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes
                 !loading && finalizarQuiz && <RankingFinal trilhaId={trilhaId} socket={socket} roomNumber={roomNumber} usersInfo={usersInfo} questoes={questoes}/>
             }
 
-            <div className="h-full flex items-end md:pb-10 space-x-2 flex-wrap pb-2">
+            <div className="h-full flex items-end md:pb-10 space-x-2 flex-wrap pb-2 flex-col md:flex-row space-y-2 md:space-y-0 pt-3 md:pt-0">
                 {!exibirRanking && !finalizarQuiz && <Button onClick={() => {
                     setExibirCorreta(true)
                     socket.emit('showCorrect', roomNumber, questoes[questaoAtiva])

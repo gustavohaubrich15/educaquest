@@ -17,7 +17,7 @@ export const HomeScreen: React.FC = () => {
     const [trilhasFiltered, setTrilhasFiltered] = useState<ITrilhaCard[]>([])
     const [trilhas, setTrilhas] = useState<ITrilha[]>([])
     const [paginateFrom, setPaginateFrom] = useState(0)
-    const [paginateTo, setPaginateTo] = useState(3)
+    const [paginateTo, setPaginateTo] = useState(2)
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
@@ -38,11 +38,11 @@ export const HomeScreen: React.FC = () => {
         const media = window.matchMedia('(max-width: 700px)');
         if (media.matches !== isMobile) {
             setIsMobile(media.matches);
-            setPaginateTo(media.matches ? 3 : 10)
+            setPaginateTo(media.matches ? 2 : 10)
         }
         const listener = () => {
             setIsMobile(media.matches)
-            setPaginateTo(media.matches ? 3 : 10)
+            setPaginateTo(media.matches ? 2 : 10)
         };
         window.addEventListener("resize", listener);
 
@@ -65,13 +65,13 @@ export const HomeScreen: React.FC = () => {
             }
         }))
         setPaginateFrom(0)
-        setPaginateTo(isMobile ? 3 : 10)
+        setPaginateTo(isMobile ? 2 : 10)
     }, [search, trilhas])
 
     const PaginaAnterior = () => {
 
-        setPaginateFrom((prevValue) => prevValue - (isMobile ? 3 : 10))
-        setPaginateTo((prevValue) => prevValue - (isMobile ? 3 : 10))
+        setPaginateFrom((prevValue) => prevValue - (isMobile ? 2 : 10))
+        setPaginateTo((prevValue) => prevValue - (isMobile ? 2 : 10))
     };
 
     const ProximaPagina = () => {
@@ -109,7 +109,7 @@ export const HomeScreen: React.FC = () => {
                 </div>
 
                 <div className=" w-full flex justify-center pb-2 space-x-2">
-                    {paginateTo > (isMobile ? 3 : 10) && <Button descricao="< Anterior" onClick={PaginaAnterior} />}
+                    {paginateTo > (isMobile ? 2 : 10) && <Button descricao="< Anterior" onClick={PaginaAnterior} />}
                     {trilhasFiltered.length > paginateTo && <Button descricao="Próxima >" onClick={ProximaPagina} />}
                 </div>
 
