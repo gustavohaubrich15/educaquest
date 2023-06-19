@@ -3,7 +3,6 @@ import { io } from 'socket.io-client';
 import { LobbyQuiz } from '../shared/components/LobbyQuiz';
 import { LobbyQuizWaiting } from '../shared/components/LobbyQuizWaiting';
 import { IQuestao } from '../shared/components/EditQuestaoCard';
-import { AnswerCardButton } from '../shared/components/AnswerCardButton';
 import { QuestionQuiz } from '../shared/components/QuestionQuiz';
 import { toast } from 'react-toastify';
 import { IResponse, IUsersInfo } from './QuizAdminScreen';
@@ -23,6 +22,7 @@ export const QuizScreen: React.FC = () => {
     const [onlineUsers, setOnlineUsers] = useState<number>(0)
     const [user, setUser] = useState<IUsersInfo>()
     const [position, setPosition] = useState<number>(0)
+    const [tempoIncialQuestao, setTempoInicialQuestao] = useState<number>(0)
 
     const entrarNaSala = (userInfo: IUsersInfo, codigoSalaEmit: string) => {
         setUser(userInfo)
@@ -36,13 +36,15 @@ export const QuizScreen: React.FC = () => {
         });
     }
 
-    socket.on('nextQuestion', (nextQuestao: string, questaoAtiva: string) => {
+    socket.on('nextQuestion', (nextQuestao: string, questaoAtiva: string, tempoInicial: string) => {
+        setRespostaCorreta(0)
         setQuestaoAtiva(questaoAtiva)
         setLoading(true)
         setMostrarCorreta(false)
         setTimeout(() => { setLoading(false) }, 10);
         const parsedUsersInfo: IQuestao = JSON.parse(nextQuestao);
         setQuestao(parsedUsersInfo)
+        setTempoInicialQuestao(Number(tempoInicial))
         setIniciarPergunta(true)
     })
 
@@ -75,7 +77,8 @@ export const QuizScreen: React.FC = () => {
             {entrouNaSala && iniciarPergunta && !loading && position === 0 && <QuestionQuiz onChangeResposta={(resposta: number) => {
                 
                 if (resposta > 0) {
-                    socket.emit('answerQuestion', codigoSala, resposta, questaoAtiva)
+                    let tempoResposta = Date.now() - tempoIncialQuestao
+                    socket.emit('answerQuestion', codigoSala, resposta, questaoAtiva, tempoResposta)
                 }
             }} mostrarCorreta={mostrarCorreta} respostaCorreta={respostaCorreta} questao={questao} />}
 

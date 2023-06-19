@@ -1,12 +1,15 @@
 import React from 'react';
 import { ReactComponent as CellPhoneIcon } from '../images/cellphone.svg'
 import { IUsersInfo } from '../../screens/QuizAdminScreen';
+import { IQuestao } from './EditQuestaoCard';
+import { scoreUser } from '../utils/scoreUser';
 
 export interface IWinnerCard {
     usuario: IUsersInfo,
-    index: number
+    index: number,
+    questoes: IQuestao[]
 }
-export const WinnerCard: React.FC<IWinnerCard> = ({ usuario, index }) => {
+export const WinnerCard: React.FC<IWinnerCard> = ({ usuario, index, questoes }) => {
 
 
 
@@ -17,6 +20,9 @@ export const WinnerCard: React.FC<IWinnerCard> = ({ usuario, index }) => {
                 <div>{usuario.nome.toUpperCase()}</div>
                 <div className="hidden justify-between md:flex">
                     <div>{` ${usuario.corretas} Acertos`}</div>
+                </div>
+                <div className="hidden justify-between md:flex">
+                    <div>{` ${scoreUser(usuario, questoes)} Pontos`}</div>
                 </div>
                 { index===0 &&<div style={{backgroundColor:'gold'}} className={`h-16 w-16 md:h-28 md:w-28 rounded-md items-center flex justify-center`}>
                     <div className="text-1xl md:text-5xl ">{index + 1}º</div>

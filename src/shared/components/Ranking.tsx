@@ -2,6 +2,7 @@ import React from 'react';
 import { RankingCard } from './RankingCard';
 import { IUsersInfo } from '../../screens/QuizAdminScreen';
 import { IQuestao } from './EditQuestaoCard';
+import { rankingUsers } from '../utils/sortedUsers';
 
 interface IRanking {
     usersInfo: IUsersInfo[],
@@ -10,16 +11,7 @@ interface IRanking {
 }
 export const Ranking: React.FC<IRanking> = ({ usersInfo, questoes, questaoAtiva }) => {
 
-    const sortedUsers = usersInfo.sort((a, b) => {
-        const aCorrectAnswers = a.respostas.filter((resposta, index)=>{
-            return questoes[index].alternativas.findIndex(alternativa => alternativa.correta === true) === resposta.resposta-1
-        }).length
-        const bCorrectAnswers = b.respostas.filter((resposta, index)=>{
-            return questoes[index].alternativas.findIndex(alternativa => alternativa.correta === true) === resposta.resposta-1
-        }).length
-    
-        return bCorrectAnswers - aCorrectAnswers;
-    });
+    const sortedUsers = rankingUsers(usersInfo,questoes)
 
     return (
         <>
@@ -49,8 +41,8 @@ export const Ranking: React.FC<IRanking> = ({ usersInfo, questoes, questaoAtiva 
                     }
                     `}
                 </style>
-                {sortedUsers.map((usuario, index)=>{
-                    return <RankingCard usuario={usuario} key={index} index={index} questaoAtiva={questaoAtiva}/>
+                {sortedUsers.map((usuario, index) => {
+                    return <RankingCard usuario={usuario} key={index} index={index} questaoAtiva={questaoAtiva} questoes={questoes} />
                 })}
             </div>
         </>

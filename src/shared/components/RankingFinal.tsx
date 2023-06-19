@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { addDoc, collection } from "firebase/firestore";
 import { databaseFirebase } from '../../App'
 import { UsuarioLogadoContext } from '../context/UsuarioLogadoContext';
+import { rankingUsers } from '../utils/sortedUsers';
 
 
 interface IRankingFinal {
@@ -21,16 +22,7 @@ interface IRankingFinal {
 export const RankingFinal: React.FC<IRankingFinal> = ({ usersInfo, questoes, socket, roomNumber, trilhaId }) => {
     const { usuarioLogado } = useContext(UsuarioLogadoContext)
 
-    const sortedUsers = usersInfo.sort((a, b) => {
-        const aCorrectAnswers = a.respostas.filter((resposta, index) => {
-            return questoes[index].alternativas.findIndex(alternativa => alternativa.correta === true) === resposta.resposta - 1
-        }).length
-        const bCorrectAnswers = b.respostas.filter((resposta, index) => {
-            return questoes[index].alternativas.findIndex(alternativa => alternativa.correta === true) === resposta.resposta - 1
-        }).length
-
-        return bCorrectAnswers - aCorrectAnswers;
-    });
+    const sortedUsers = rankingUsers(usersInfo,questoes)
 
     
     const adicionarEstatistica = async() =>{
@@ -59,7 +51,7 @@ export const RankingFinal: React.FC<IRankingFinal> = ({ usersInfo, questoes, soc
             <Confetti style={{width:'100%'}}  />
             <div className="md:w-[80%] md:h-[70%] flex pt-2 pb-2 justify-center">
                 {sortedUsers.length > 0 && sortedUsers.slice(0,3).map((usuario, index) => {
-                    return <WinnerCard usuario={usuario} key={index} index={index} />
+                    return <WinnerCard usuario={usuario} key={index} index={index} questoes={questoes} />
                 })}
                 
             </div>
@@ -91,7 +83,7 @@ export const RankingFinal: React.FC<IRankingFinal> = ({ usersInfo, questoes, soc
                 </style>
                 {sortedUsers.map((usuario, index) => {
                     if (index > 2) {
-                        return <RankingCard usuario={usuario} key={index} index={index} questaoAtiva={questoes.length -1} />
+                        return <RankingCard usuario={usuario} key={index} index={index} questaoAtiva={questoes.length -1} questoes={questoes} />
                     }
                     return
                 })}

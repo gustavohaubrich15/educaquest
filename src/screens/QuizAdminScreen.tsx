@@ -13,7 +13,7 @@ export interface IUsersInfo {
     nome: string,
     numeroSala: number,
     color: string,
-    respostas: { resposta: number }[]
+    respostas: { resposta: number, tempoResposta: number }[]
     corretas?: number
 }
 
@@ -67,7 +67,7 @@ export const QuizAdminScreen: React.FC = () => {
     const changeQuestion = (questaoAtiva : number) => {
         const updateUserInfo : IUsersInfo[] = usersInfo.map(user => {
             if (!user.respostas[questaoAtiva]) {
-                return { ...user, resposta: user.respostas.push({resposta:10}) };
+                return { ...user, resposta: user.respostas.push({resposta:10, tempoResposta: 0}) };
             }
             return user;
         });
@@ -79,13 +79,12 @@ export const QuizAdminScreen: React.FC = () => {
         setUsersInfo(parsedUsersInfo)
     });
 
-    socket.on('answerQuestionUser', (userInfo: string, respostaUser: string, questaoAtiva: string) => {
+    socket.on('answerQuestionUser', (userInfo: string, respostaUser: string, questaoAtiva: string, tempoResposta: string) => {
         const parsedUsersInfo: IUsersInfo = JSON.parse(userInfo);
-
         if (parsedUsersInfo) {
             const updateUserInfo : IUsersInfo[] = usersInfo.map(user => {
-                if (user.nome === parsedUsersInfo.nome && user.respostas.length < Number(questaoAtiva + 1)) {
-                    return { ...user, resposta: user.respostas.push({resposta:Number(respostaUser)}) };
+                if (user.nome === parsedUsersInfo.nome && user.respostas.length < Number(questaoAtiva + 1)) {   
+                    return { ...user, resposta: user.respostas.push({resposta:Number(respostaUser), tempoResposta: Number(tempoResposta)}) };
                 }
                 return user;
             });
@@ -102,7 +101,7 @@ export const QuizAdminScreen: React.FC = () => {
                     setIniciar(valor)
                     socket.emit('startRoom', roomNumber)
                 }} roomNumber={Number(roomNumber)} titulo={titulo} usersInfo={usersInfo} />}
-                {iniciar && <QuizAdminQuestScreen trilhaId={trilhaId ?? ''} onChangeQuestion={(questaoAtiva: number) => changeQuestion(questaoAtiva)} roomNumber={roomNumber} socket={socket} questoes={questoes} usersInfo={usersInfo} onChangePoints={(usuarios) => setUsersInfo(usuarios)} />}
+                {iniciar && <QuizAdminQuestScreen trilhaId={trilhaId ?? ''} onChangeQuestion={(questaoAtiva: number) => changeQuestion(questaoAtiva)} roomNumber={roomNumber} socket={socket} questoes={questoes} usersInfo={usersInfo} onChangePoints={(usuarios) => setUsersInfo(usuarios)}/>}
 
             </div>
         </>

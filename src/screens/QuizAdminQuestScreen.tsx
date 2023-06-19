@@ -19,7 +19,7 @@ export interface IQuizAdminQuestScreen {
     trilhaId: string
 }
 
-export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes, usersInfo, onChangePoints, socket, roomNumber, onChangeQuestion, trilhaId }) => {
+export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes, usersInfo, onChangePoints, socket, roomNumber, onChangeQuestion, trilhaId}) => {
 
     const [questaoAtiva, setQuestaoAtiva] = useState<number>(0)
     const [exibirCorreta, setExibirCorreta] = useState<boolean>(false)
