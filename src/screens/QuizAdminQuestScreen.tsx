@@ -43,7 +43,7 @@ export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes
             }
         })
         onChangePoints(calculatedPoints)
-    },[exibirRanking])
+    },[exibirRanking, finalizarQuiz])
 
     useEffect(()=>{
         socket.emit('startQuestion', roomNumber, questoes[questaoAtiva], questaoAtiva)
