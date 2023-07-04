@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { QuizPin } from '../shared/components/QuizPin';
 import { Button } from '../shared/components/Button';
 import { UserCount } from '../shared/components/UserCount';

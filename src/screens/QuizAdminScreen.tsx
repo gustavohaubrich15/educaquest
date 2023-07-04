@@ -6,6 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { IQuestao } from '../shared/components/EditQuestaoCard';
 import { QuizAdminLobbyScreen } from './QuizAdminLobbyScreen';
 import { QuizAdminQuestScreen } from './QuizAdminQuestScreen';
+import { ReactComponent as Origami } from '../shared/images/origami.svg'
 import io from 'socket.io-client';
 import { toast } from 'react-toastify';
 
@@ -33,6 +34,7 @@ export const QuizAdminScreen: React.FC = () => {
     const [questoes, setQuestoes] = useState<IQuestao[]>([])
     const [roomNumber, setRoomNumber] = useState<string>('')
     const [iniciar, setIniciar] = useState<boolean>(false)
+    const [salaCriada, setSalaCriada] = useState<boolean>(false)
     const [usersInfo, setUsersInfo] = useState<IUsersInfo[]>([])
     const [trilhaId, setTrilhaId] = useState<string>()
 
@@ -60,14 +62,17 @@ export const QuizAdminScreen: React.FC = () => {
         socket.emit('createRoom', sala, (response: IResponse) => {
             if (response.status) {
                 toast.success(response.mensagem)
+                setSalaCriada(true)
+            }else{
+                toast.error("Falha ao criar sala")
             }
         });
     }
 
-    const changeQuestion = (questaoAtiva : number) => {
-        const updateUserInfo : IUsersInfo[] = usersInfo.map(user => {
+    const changeQuestion = (questaoAtiva: number) => {
+        const updateUserInfo: IUsersInfo[] = usersInfo.map(user => {
             if (!user.respostas[questaoAtiva]) {
-                return { ...user, resposta: user.respostas.push({resposta:10, tempoResposta: 0}) };
+                return { ...user, resposta: user.respostas.push({ resposta: 10, tempoResposta: 0 }) };
             }
             return user;
         });
@@ -82,9 +87,9 @@ export const QuizAdminScreen: React.FC = () => {
     socket.on('answerQuestionUser', (userInfo: string, respostaUser: string, questaoAtiva: string, tempoResposta: string) => {
         const parsedUsersInfo: IUsersInfo = JSON.parse(userInfo);
         if (parsedUsersInfo) {
-            const updateUserInfo : IUsersInfo[] = usersInfo.map(user => {
-                if (user.nome === parsedUsersInfo.nome && user.respostas.length < Number(questaoAtiva + 1)) {   
-                    return { ...user, resposta: user.respostas.push({resposta:Number(respostaUser), tempoResposta: Number(tempoResposta)}) };
+            const updateUserInfo: IUsersInfo[] = usersInfo.map(user => {
+                if (user.nome === parsedUsersInfo.nome && user.respostas.length < Number(questaoAtiva + 1)) {
+                    return { ...user, resposta: user.respostas.push({ resposta: Number(respostaUser), tempoResposta: Number(tempoResposta) }) };
                 }
                 return user;
             });
@@ -97,11 +102,15 @@ export const QuizAdminScreen: React.FC = () => {
         <>
             <NavSlider />
             <div className="flex flex-col space-y-2 pt-5 justify-start items-center font-bold text-white h-full w-full md:pl-24">
-                {!iniciar && <QuizAdminLobbyScreen onChangeIniciar={(valor: boolean) => {
+                {!salaCriada && <div className="flex  flex-col justify-center items-center h-full pb-32">
+                    <Origami className=" animate-bounce w-10 h-10 md:w-14 md:h-14" />
+                    <div className="text-lg font-bold uppercase">Criando sala ....</div>
+                </div>}
+                {!iniciar && salaCriada && <QuizAdminLobbyScreen onChangeIniciar={(valor: boolean) => {
                     setIniciar(valor)
                     socket.emit('startRoom', roomNumber)
                 }} roomNumber={Number(roomNumber)} titulo={titulo} usersInfo={usersInfo} />}
-                {iniciar && <QuizAdminQuestScreen trilhaId={trilhaId ?? ''} onChangeQuestion={(questaoAtiva: number) => changeQuestion(questaoAtiva)} roomNumber={roomNumber} socket={socket} questoes={questoes} usersInfo={usersInfo} onChangePoints={(usuarios) => setUsersInfo(usuarios)}/>}
+                {iniciar && <QuizAdminQuestScreen trilhaId={trilhaId ?? ''} onChangeQuestion={(questaoAtiva: number) => changeQuestion(questaoAtiva)} roomNumber={roomNumber} socket={socket} questoes={questoes} usersInfo={usersInfo} onChangePoints={(usuarios) => setUsersInfo(usuarios)} />}
 
             </div>
         </>

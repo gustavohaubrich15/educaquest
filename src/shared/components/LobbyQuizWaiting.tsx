@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ReactComponent as Origami } from '../images/origami.svg'
-import { Socket } from 'socket.io-client';
 import { UserCount } from './UserCount';
 
 interface ILobbyQuizWaiting {
