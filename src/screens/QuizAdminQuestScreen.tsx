@@ -7,6 +7,7 @@ import { Ranking } from '../shared/components/Ranking';
 import { IUsersInfo } from './QuizAdminScreen';
 import { RankingFinal } from '../shared/components/RankingFinal';
 import { Socket } from 'socket.io-client';
+import { UserCount } from '../shared/components/UserCount';
 
 
 export interface IQuizAdminQuestScreen {
@@ -19,7 +20,7 @@ export interface IQuizAdminQuestScreen {
     trilhaId: string
 }
 
-export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes, usersInfo, onChangePoints, socket, roomNumber, onChangeQuestion, trilhaId}) => {
+export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes, usersInfo, onChangePoints, socket, roomNumber, onChangeQuestion, trilhaId }) => {
 
     const [questaoAtiva, setQuestaoAtiva] = useState<number>(0)
     const [exibirCorreta, setExibirCorreta] = useState<boolean>(false)
@@ -27,27 +28,27 @@ export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes
     const [finalizarQuiz, setFinalizarQuiz] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
 
-    useEffect(()=>{
+    useEffect(() => {
 
-        let corretas : number[] = []
+        let corretas: number[] = []
 
-        questoes.forEach((questao)=>{
+        questoes.forEach((questao) => {
             corretas.push(questao.alternativas.findIndex(alternativa => alternativa.correta === true) + 1)
         })
-        
-        let calculatedPoints = usersInfo.map((usuario)=>{
-            
+
+        let calculatedPoints = usersInfo.map((usuario) => {
+
             return {
                 ...usuario,
-                corretas : usuario.respostas.filter((resposta, index)=> resposta.resposta === corretas[index] && index<= questaoAtiva).length 
+                corretas: usuario.respostas.filter((resposta, index) => resposta.resposta === corretas[index] && index <= questaoAtiva).length
             }
         })
         onChangePoints(calculatedPoints)
-    },[exibirRanking, finalizarQuiz])
+    }, [exibirRanking, exibirCorreta, finalizarQuiz])
 
-    useEffect(()=>{
+    useEffect(() => {
         socket.emit('startQuestion', roomNumber, questoes[questaoAtiva], questaoAtiva)
-    },[])
+    }, [])
 
     return (
         <>
@@ -64,11 +65,18 @@ export const QuizAdminQuestScreen: React.FC<IQuizAdminQuestScreen> = ({ questoes
             }
 
             {
-                !loading && exibirRanking && !finalizarQuiz && <Ranking usersInfo={usersInfo} questoes={questoes} questaoAtiva={questaoAtiva}/>
+                !loading && exibirRanking && !finalizarQuiz && <Ranking usersInfo={usersInfo} questoes={questoes} questaoAtiva={questaoAtiva} />
             }
 
             {
-                !loading && finalizarQuiz && <RankingFinal trilhaId={trilhaId} socket={socket} roomNumber={roomNumber} usersInfo={usersInfo} questoes={questoes}/>
+                !loading && finalizarQuiz && <RankingFinal trilhaId={trilhaId} socket={socket} roomNumber={roomNumber} usersInfo={usersInfo} questoes={questoes} />
+            }
+
+            {!loading && !finalizarQuiz && !exibirRanking && questoes[questaoAtiva] !== undefined &&
+                <div className="flex justify-center items-center md:pt-5 pt-2 space-y-2 flex-col">
+                    <div>Total de usuários : {usersInfo.length}</div>
+                    <div>Responderam : {usersInfo.filter((user)=>{ return user.respostas.length >= questaoAtiva+1}).length}</div>
+                </div>
             }
 
             <div className="h-full flex items-end md:pb-10 space-x-2 flex-wrap pb-2 flex-col md:flex-row space-y-2 md:space-y-0 pt-3 md:pt-0">

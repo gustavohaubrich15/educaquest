@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import { RankingCard } from './RankingCard';
 import { IUsersInfo } from '../../screens/QuizAdminScreen';
 import { IQuestao } from './EditQuestaoCard';
@@ -21,7 +21,8 @@ interface IRankingFinal {
 }
 export const RankingFinal: React.FC<IRankingFinal> = ({ usersInfo, questoes, socket, roomNumber, trilhaId }) => {
     const { usuarioLogado } = useContext(UsuarioLogadoContext)
-
+    const [adicionadoEstatistica, setAdicionadoEstatistica] = useState<boolean>(false)
+    
     const sortedUsers = rankingUsers(usersInfo,questoes)
 
     
@@ -41,7 +42,8 @@ export const RankingFinal: React.FC<IRankingFinal> = ({ usersInfo, questoes, soc
         }
     }
 
-    if(sortedUsers){
+    if(sortedUsers && !adicionadoEstatistica){
+        setAdicionadoEstatistica(true)
         socket.emit('finishQuiz', roomNumber, sortedUsers)
         adicionarEstatistica()
     }
