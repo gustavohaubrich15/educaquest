@@ -37,7 +37,7 @@ export const LoginScreen: React.FC = () => {
         <>  
             <div className="flex flex-col pt-24 space-y-1 justify-start max-sm:pt-28 items-center font-bold text-white  h-full w-full">
 
-                <div className=" font-poppins text-6xl leading-10 max-sm:text-2xl">Educa Quest</div>
+                <div className=" font-poppins text-6xl leading-10 max-sm:text-2xl">EducaQuest</div>
                 <div className=" pt-5 flex justify-center items-center text-center space-x-2 ">
                     <div className="bg-white w-16 h-1 rounded-sm  max-sm:w-8"></div>
                     <div className="max-sm:text-xs" >REALIZE O LOGIN</div>
