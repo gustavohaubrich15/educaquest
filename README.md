@@ -2,7 +2,7 @@
 
 
 &nbsp;
-> Dashboard para administrar criação de novos quiz e inicialização do quiz usando socket io
+> Dashboard para administrar criação de novos quiz e inicialização do quiz usando socket io.
 > O professor pode acessar o dashboard, criando novos quiz e também aplicando eles com todos os alunos utilizando o 
 > socket io. 
 
